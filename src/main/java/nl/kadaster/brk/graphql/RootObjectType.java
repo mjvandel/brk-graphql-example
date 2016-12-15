@@ -22,31 +22,25 @@ package nl.kadaster.brk.graphql;
 import com.oembedler.moon.graphql.engine.stereotype.GraphQLField;
 import com.oembedler.moon.graphql.engine.stereotype.GraphQLIn;
 import com.oembedler.moon.graphql.engine.stereotype.GraphQLObject;
-import nl.kadaster.brk.graphql.jfall.StaticData;
 import nl.kadaster.brk.graphql.kadastraalobject.KadastraalObject;
-import nl.kadaster.brk.graphql.jfall.objecttype.Talk;
-import nl.kadaster.brk.graphql.jfall.objecttype.Viewer;
+import nl.kadaster.brk.graphql.kadastraalobject.KadastraleAanduiding;
+import org.apache.commons.lang3.StringUtils;
 
 @GraphQLObject("Root")
 public class RootObjectType {
 
     @GraphQLField
     public KadastraalObject kadastraalObject(@GraphQLIn("kadastraalObjectId") final String kadastraalObjectId) {
-        return new KadastraalObject("NL.KadastraalObject.000000000001", "Rotterdam A1234");
-    }
-
-    @GraphQLField
-    public Viewer viewer(@GraphQLIn("token") final String token) {
-        return new Viewer(token);
-    }
-
-    @GraphQLField
-    public Talk talk(@GraphQLIn("title") final String title) {
-        for (Talk talk : StaticData.talks) {
-            if (talk.getTitle().equals(title)) {
-                return talk;
-            }
+        KadastraalObject ko = null;
+        if (StringUtils.isNotBlank(kadastraalObjectId)) {
+            ko = new KadastraalObject();
+            ko.aanduiding = new KadastraleAanduiding();
+            ko.aanduiding.kadastraleGemeente = "Rotterdam";
+            ko.aanduiding.sectie = "A";
+            ko.aanduiding.perceelNummer = "1234";
+            ko.identificatie = new Identificatie("NL.KadastraalObject." + kadastraalObjectId, kadastraalObjectId);
         }
-        return null;
+        return ko;
     }
+
 }
