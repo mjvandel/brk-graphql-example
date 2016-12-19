@@ -33,6 +33,7 @@ apply plugin: 'spring-boot'
 
 repositories {
     jcenter()
+    mavenLocal()
     maven { url  'http://dl.bintray.com/oembedler/maven' }
 }
 
